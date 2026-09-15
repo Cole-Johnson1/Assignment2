@@ -9,17 +9,26 @@ using namespace std;
 struct STUDENT_DATA {
     string firstName;
     string lastName;
+    string email;
 };
 
 int main(){
 
-    ifstream inFile("StudentData.txt");
+#ifdef PRE_RELEASE
+    cout << "Running Pre-Release version" << endl;
+    const string dataFile = "StudentData_Emails.txt";
+#else
+    cout << "Running Standard version" << endl;
+    const string dataFile = "StudentData.txt";
+#endif
+
+    ifstream inFile(dataFile);
     if (!inFile) {
         // in case the exe is run from the output/ folder
-        inFile.open("../StudentData.txt");
+        inFile.open("../" + dataFile);
     }
     if (!inFile) {
-        cerr << "Error: could not open StudentData.txt" << endl;
+        cerr << "Error: could not open " << dataFile << endl;
         return 1;
     }
 
@@ -35,7 +44,8 @@ int main(){
         STUDENT_DATA student;
 
         getline(ss, student.firstName, ',');
-        getline(ss, student.lastName);
+        getline(ss, student.lastName, ',');
+        getline(ss, student.email);
 
         students.push_back(student);
     }
@@ -44,7 +54,7 @@ int main(){
 
 #ifdef _DEBUG
     for (const STUDENT_DATA& student : students) {
-        cout << student.firstName << " " << student.lastName << endl;
+        cout << student.firstName << " " << student.lastName << " " << student.email << endl;
     }
 #endif
 
